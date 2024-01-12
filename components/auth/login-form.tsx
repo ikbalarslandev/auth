@@ -18,10 +18,16 @@ import { Button } from "../ui/button";
 import FormError from "./form-error";
 import FormSuccess from "./form-success";
 import { login } from "@/actions/login";
-import { useTransition, useState, Suspense } from "react";
-import { TbError404 } from "react-icons/tb";
+import { useTransition, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
+  const serachParams = useSearchParams();
+  const urlError =
+    serachParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email is already used by another account"
+      : "";
+
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -40,8 +46,8 @@ const LoginForm = () => {
 
     startTransition(() => {
       login(data).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        //setSuccess(data?.success);
       });
     });
   };
@@ -93,7 +99,7 @@ const LoginForm = () => {
             />
           </div>
 
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
 
           <Button type="submit" className="w-full" disabled={isPending}>

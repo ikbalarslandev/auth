@@ -3,9 +3,14 @@ import { LoginSchema } from "./schemas";
 import bcrytpjs from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import { getUserByEmail } from "./data/user";
+import Google from "next-auth/providers/google";
 
 export default {
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
