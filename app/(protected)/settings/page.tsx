@@ -2,6 +2,8 @@ import { auth, signOut } from "@/auth";
 
 const SettingsPage = async () => {
   const session = await auth();
+
+  session?.user;
   return (
     <div>
       {JSON.stringify(session)}{" "}
