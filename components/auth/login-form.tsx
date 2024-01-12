@@ -1,10 +1,11 @@
 "use client";
 
+import { z } from "zod";
+import { LoginSchema } from "@/schemas";
 import CardWrapper from "./card-wrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { LoginSchema } from "@/schemas";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -12,13 +13,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import FormError from "./form-error";
-import FormSuccess from "./form-success";
 
-export default function LoginForm() {
+const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -26,10 +24,6 @@ export default function LoginForm() {
       password: "",
     },
   });
-
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    console.log(data);
-  };
   return (
     <CardWrapper
       headerLabel="welcome back"
@@ -38,7 +32,7 @@ export default function LoginForm() {
       showSocial
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(() => {})} className="space-y-6">
           <div className="space-y-4">
             <FormField
               control={form.control}
@@ -49,7 +43,7 @@ export default function LoginForm() {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="email@gmail.com"
+                      placeholder="john.doe@example.com"
                       type="email"
                     />
                   </FormControl>
@@ -60,24 +54,17 @@ export default function LoginForm() {
             <FormField
               control={form.control}
               name="password"
-              render={({ field, formState }) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="
-                      *********"
-                      type="password"
-                    />
+                    <Input {...field} placeholder="******" type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <FormError message="error" />
-          <FormSuccess message="success" />
           <Button type="submit" className="w-full">
             Login
           </Button>
@@ -85,4 +72,6 @@ export default function LoginForm() {
       </Form>
     </CardWrapper>
   );
-}
+};
+
+export default LoginForm;
